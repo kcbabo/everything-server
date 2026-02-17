@@ -1,0 +1,16 @@
+name: everything-server
+framework: fastmcp-python
+version: 0.1.0
+description: MCP everything server
+author: kcbabo
+email: keith@solo.io
+secrets:
+    local:
+        enabled: false
+        provider: env
+        file: .env.local
+runtimeHint: python
+runtimeArgs:
+    - src/main.py
+created_at: 2026-02-17T09:28:15.437375-05:00
+updated_at: 2026-02-17T09:28:15.45823-05:00
