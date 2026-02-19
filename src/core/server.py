@@ -4,6 +4,7 @@ This server automatically discovers and loads tools from the tools directory.
 Each tool file should contain a function decorated with @mcp.tool().
 """
 
+import asyncio
 import importlib.util
 import logging
 import sys
@@ -73,15 +74,15 @@ class DynamicMCPServer:
 
         for tool_file in tool_files:
             try:
-                # Get the number of tools before importing
-                tools_before = len(self.mcp._tool_manager._tools)
+                # Get the number of tools before importing (using public API)
+                tools_before = len(asyncio.run(self.mcp.list_tools()))
 
                 # Simply import the module - tools auto-register via @mcp.tool()
                 # decorator
                 tool_name = tool_file.stem
                 if self._import_tool_module(tool_file, tool_name):
                     # Check if any tools were actually registered
-                    tools_after = len(self.mcp._tool_manager._tools)
+                    tools_after = len(asyncio.run(self.mcp.list_tools()))
                     if tools_after > tools_before:
                         self.loaded_tools.append(tool_name)
                         loaded_count += 1
@@ -140,9 +141,9 @@ class DynamicMCPServer:
 
     def get_tools_sync(self) -> dict[str, Any]:
         """Get tools synchronously for testing purposes."""
-        # This is a simplified version for testing - in real usage, use get_tools()
-        # async
-        return self.mcp._tool_manager._tools
+        # Use public list_tools() API; return name -> tool for compatibility
+        tools_list = asyncio.run(self.mcp.list_tools())
+        return {t.name: t for t in tools_list}
 
     def run(self, transport_mode: str = "stdio", host: str = "localhost",
             port: int = 3000, stateless_http: bool = False) -> None:
