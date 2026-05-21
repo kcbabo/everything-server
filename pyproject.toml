@@ -6,7 +6,7 @@ authors = [
     {name = "kcbabo", email = "keith@solo.io"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "fastmcp>=0.2.0",
     "pydantic>=2.0.0",
